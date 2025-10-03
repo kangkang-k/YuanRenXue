@@ -1,26 +1,29 @@
-import base64
-from Crypto.Cipher import DES, DES3
+import requests
 
-# 待解密的 Base64 字符串
-enc_b64 = "L89VjHns07U="
-enc_bytes = base64.b64decode(enc_b64)  # 解码成字节
 
-# 假设密钥（需要知道密钥才能解密，这里举例用 '12345678'）
-des_key = b"12345678"       # DES 8 字节
-des3_key = b"123456781234567812345678"  # 3DES 24 字节
+headers = {
+    "Accept": "*/*",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "Pragma": "no-cache",
+    "Range": "bytes=0-",
+    "Referer": "https://afdian.com/",
+    "Sec-Fetch-Dest": "video",
+    "Sec-Fetch-Mode": "no-cors",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-Storage-Access": "active",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0",
+    "sec-ch-ua": "\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Microsoft Edge\";v=\"140\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\""
+}
+url = "https://vod.afdiancdn.com/55f3070fvodtranscq1256217904/c10983b6387702299691022923/v.f100840.mp4"
+params = {
+    "t": "68d821cf",
+    "us": "68d6d04f301e1",
+    "sign": "8cb825f038ea3778131e14433f33f2b3"
+}
+response = requests.get(url, headers=headers, params=params)
 
-# DES 解密（ECB模式）
-des_cipher = DES.new(des_key, DES.MODE_ECB)
-try:
-    des_decrypted = des_cipher.decrypt(enc_bytes)
-    print("DES 解密结果:", des_decrypted)
-except Exception as e:
-    print("DES 解密失败:", e)
-
-# 3DES 解密（ECB模式）
-des3_cipher = DES3.new(des3_key, DES3.MODE_ECB)
-try:
-    des3_decrypted = des3_cipher.decrypt(enc_bytes)
-    print("3DES 解密结果:", des3_decrypted)
-except Exception as e:
-    print("3DES 解密失败:", e)
+print(response.content)
